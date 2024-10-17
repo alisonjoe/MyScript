@@ -38,13 +38,15 @@ go install -v github.com/josharian/impl@latest
 go install -v github.com/haya14busa/goplay/cmd/goplay@latest
 go install -v github.com/go-delve/delve/cmd/dlv@latest
 go install -v honnef.co/go/tools/cmd/staticcheck@latest
+go install -v github.com/golang/lint/golint
+go install -v github.com/kisielk/errcheck
+go install -v github.com/ofabry/go-callvis@latest
 go install -v golang.org/x/tools/gopls@latest
-go install -v golang.org/x/tools/cmd/goimports@latest
 
-for name in "glog" "image" "perf" "snappy" "term" "sync" "winstrap" "cwg" \
-	"leveldb" "text" "net" "build" "protobuf" "dep" "sys" "crypto" "gddo" "tools" \
-	"scratch" "proposal" "mock" "oauth2" "freetype" "debug" "mobile" "gofrontend" \
-	"lint" "appengine" "geo" "review" "arch" "vgo" "exp" "time"; do
+for name in "glog" "image" "perf" "goimports" "snappy" "term" "sync" "winstrap" "cwg" \
+        "leveldb" "text" "net" "build" "protobuf" "dep" "sys" "crypto" "gddo" "tools" \
+        "scratch" "proposal" "mock" "oauth2" "freetype" "debug" "mobile" "gofrontend" \
+        "lint" "appengine" "geo" "review" "arch" "vgo" "exp" "time" "godoc"; do
     go install -v golang.org/x/tools/cmd/${name}@latest
 done
 
