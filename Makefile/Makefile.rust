@@ -1,0 +1,88 @@
+# Makefile for Rust project with cross-platform support and default to current system
+
+# Default goal
+.DEFAULT_GOAL := build
+
+# Define build directories
+TARGET_DIR := target
+DEBUG_DIR := $(TARGET_DIR)/debug
+RELEASE_DIR := $(TARGET_DIR)/release
+
+# Default build flags
+DEBUG_FLAGS := --debug
+RELEASE_FLAGS := --release
+TEST_FLAGS := test
+
+# Current platform and kernel version
+OS := $(shell uname -s)
+KERNEL := $(shell uname -r)
+ARCH := $(shell uname -m)
+
+# Set Rust target to the current system's architecture by default
+# We use `apple-darwin` for macOS, `unknown-linux-gnu` for Linux, and `pc-windows-gnu` for Windows.
+# Rust targets are defined as <architecture>-<os>-<environment> (e.g., x86_64-apple-darwin)
+ifeq ($(OS),Darwin)
+  DEFAULT_TARGET := x86_64-apple-darwin
+else ifeq ($(OS),Linux)
+  DEFAULT_TARGET := x86_64-unknown-linux-gnu
+else ifeq ($(OS),WindowsNT)
+  DEFAULT_TARGET := x86_64-pc-windows-gnu
+else
+  DEFAULT_TARGET := $(ARCH)-$(OS)-gnu
+endif
+
+# Define other possible targets (cross-compilation)
+LINUX_TARGET := x86_64-unknown-linux-gnu
+MACOS_TARGET := x86_64-apple-darwin
+WINDOWS_TARGET := x86_64-pc-windows-gnu
+
+# Detect the current system and kernel version for the default build
+build:
+        @echo "Building for $(OS) $(KERNEL) $(ARCH)..."
+        @cargo build --target $(DEFAULT_TARGET) $(RELEASE_FLAGS)
+
+# Build debug version for the current system
+debug:
+        @echo "Building Debug version for $(OS) $(KERNEL) $(ARCH)..."
+        @cargo build --target $(DEFAULT_TARGET) $(DEBUG_FLAGS)
+
+# Build release version for the current system
+release:
+        @echo "Building Release version for $(OS) $(KERNEL) $(ARCH)..."
+        @cargo build --target $(DEFAULT_TARGET) $(RELEASE_FLAGS)
+
+# Run the project (Debug version by default)
+run:
+        @echo "Running the project..."
+        @cargo run --target $(DEFAULT_TARGET) $(DEBUG_FLAGS)
+
+# Run tests
+test:
+        @echo "Running tests..."
+        @cargo test --target $(DEFAULT_TARGET) $(TEST_FLAGS)
+
+# Clean up build artifacts
+clean:
+        @echo "Cleaning project..."
+        @cargo clean
+
+# Cross-compiling for a specific target (Linux, MacOS, or Windows)
+cross_compile_linux:
+        @echo "Cross-compiling for Linux target..."
+        @cargo build --target $(LINUX_TARGET) $(RELEASE_FLAGS)
+
+cross_compile_macos:
+        @echo "Cross-compiling for macOS target..."
+        @cargo build --target $(MACOS_TARGET) $(RELEASE_FLAGS)
+
+cross_compile_windows:
+        @echo "Cross-compiling for Windows target..."
+        @cargo build --target $(WINDOWS_TARGET) $(RELEASE_FLAGS)
+
+# Print information about the current system and kernel version
+info:
+        @echo "Current OS: $(OS)"
+        @echo "Current Kernel: $(KERNEL)"
+        @echo "Current Architecture: $(ARCH)"
+        @echo "Default target: $(DEFAULT_TARGET)"
+        @echo "Available targets: debug, release, test, clean, run, cross_compile, cross_compile_linux, cross_compile_macos, cross_compile_windows"
